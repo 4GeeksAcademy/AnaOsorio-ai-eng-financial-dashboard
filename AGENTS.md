@@ -31,9 +31,8 @@ Panel de métricas financieras con datos simulados, frontend React y backend Fas
 
 ## Forma de trabajar
 
-- Antes de trabajar, revisa las instrucciones en `.agents/rules`, las skills en `.agents/skills` y los documentos relevantes de `memory-bank/`, incluidos `product.md` y `techContext.md`.
+- Antes de trabajar, revisa las instrucciones en `.agents/rules`, las skills en `.agents/skills` y la memoria en `memory-bank`, si existen.
 - Antes de trabajar en frontend, lee `.agents/rules/frontend.md`; antes de trabajar en backend, lee `.agents/rules/backend.md`.
-- Después de cada nueva implementación o cambio importante en el código, actualiza los documentos pertinentes de `memory-bank/` para que reflejen el estado actual verificado del proyecto. Distingue los hechos de las suposiciones.
 - Elige pruebas relacionadas con el comportamiento modificado. Las suites existentes son `backend/tests/test_routes.py` y `frontend/src/lib/financial-utils.test.ts`.
 
 ## Límites y verificación
