@@ -1,0 +1,7 @@
+- []T1 – [Backend] Extender `MetricsFacets` para devolver categorías disponibles por grupo B2B y B2C.
+- []T2 – [Backend] Actualizar la prueba de facetas en `backend/tests/test_routes.py` para verificar las categorías por grupo.
+- []T3 – [Frontend] Añadir los tipos para las facetas ampliadas y la comparación en `frontend/src/lib/financial-types.ts` y `frontend/specs/api-types.ts`.
+- []T4 – [Frontend] Crear la vista con las dos tablas de categorías y el gráfico comparativo de ingresos.
+- []T5 – [Frontend] Consultar facetas y top 5 de ingresos por grupo, calcular los porcentajes sobre el total del grupo y aplicar el rango de fechas activo.
+- []T6 – [Frontend] Dar acceso a la vista desde `App.tsx` y pasarle el rango de fechas de la Funcionalidad 1.
+- []T7 – [Verificación] Ejecutar `pytest backend/tests/test_routes.py`, `npm test` y `npm run build`; comprobar uno por uno los criterios de aceptación de `spec.md` para tablas, porcentajes, gráfico y filtro de fechas.

@@ -1,0 +1,7 @@
+- []T1 – [Backend] Ajustar `detect_outcome_alerts` para calcular la media de los tres períodos anteriores.
+- []T2 – [Backend] Limitar el umbral del endpoint de alertas al rango `0.01–1.0`.
+- []T3 – [Backend] Añadir a las pruebas existentes la cobertura del cálculo de media móvil y los límites del umbral.
+- []T4 – [Frontend] Añadir el tipo de respuesta de alertas en `financial-types.ts`.
+- []T5 – [Frontend] Crear la tabla bajo los gráficos con las cuatro columnas requeridas y un estado vacío explícito.
+- []T6 – [Frontend] Conectar la tabla con el endpoint de alertas, el umbral inicial `0.3` y el rango de fechas activo.
+- []T7 – [Verificación] Ejecutar las pruebas existentes de backend, `npm test` y `npm run build`; comprobar uno por uno los criterios de aceptación de `spec.md`.

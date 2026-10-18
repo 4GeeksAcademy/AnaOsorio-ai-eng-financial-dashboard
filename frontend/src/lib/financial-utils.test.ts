@@ -61,6 +61,30 @@ describe("computeKPIs", () => {
 });
 
 describe("computeMonthlyData", () => {
+  it("keeps ISO dates in the correct month across a year boundary", () => {
+    const boundaryMovements: FinancialMovement[] = [
+      {
+        create_date: "2025-12-31",
+        amount: 200,
+        operation_type: "income",
+        category: "sales",
+        business_type: "B2B",
+      },
+      {
+        create_date: "2026-01-01",
+        amount: 100,
+        operation_type: "outcome",
+        category: "operational",
+        business_type: "B2C",
+      },
+    ];
+
+    expect(computeMonthlyData(boundaryMovements).map((item) => item.month)).toEqual([
+      "Dec 2025",
+      "Jan 2026",
+    ]);
+  });
+
   it("returns chronological year-month points with aggregated totals", () => {
     const unsortedCrossYearMovements: FinancialMovement[] = [
       {
