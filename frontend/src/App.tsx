@@ -106,6 +106,19 @@ async function fetchMetricsFacets(): Promise<MetricsFacets> {
   return payload;
 }
 
+let metricsFacetsPromise: Promise<MetricsFacets> | null = null;
+
+function fetchMetricsFacetsOnce(): Promise<MetricsFacets> {
+  if (!metricsFacetsPromise) {
+    metricsFacetsPromise = fetchMetricsFacets().catch((error: unknown) => {
+      metricsFacetsPromise = null;
+      throw error;
+    });
+  }
+
+  return metricsFacetsPromise;
+}
+
 function App() {
   const [metrics, setMetrics] = useState<KPIMetrics | null>(null);
   const [monthlyData, setMonthlyData] = useState<MonthlyDataPoint[]>([]);
@@ -117,12 +130,10 @@ function App() {
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
-    setError(null);
 
     Promise.all([
       fetchFinancialData(startDate, endDate),
-      fetchMetricsFacets(),
+      fetchMetricsFacetsOnce(),
     ])
       .then(([movements, availableFacets]) => {
         if (!active) return;
@@ -135,7 +146,7 @@ function App() {
         setMetrics(null);
         setMonthlyData([]);
         setError(
-          "No se pudo cargar la informacion financiera. Revisa la API de backend.",
+          "No se pudo cargar la información financiera. Revisa la API del backend.",
         );
       })
       .finally(() => {
@@ -173,7 +184,11 @@ function App() {
               <input
                 type="date"
                 value={startDate}
-                onChange={(event) => setStartDate(event.target.value)}
+                onChange={(event) => {
+                  setStartDate(event.target.value);
+                  setLoading(true);
+                  setError(null);
+                }}
                 className="rounded-md border border-border bg-background px-3 py-2 text-sm"
               />
             </label>
@@ -182,24 +197,33 @@ function App() {
               <input
                 type="date"
                 value={endDate}
-                onChange={(event) => setEndDate(event.target.value)}
+                onChange={(event) => {
+                  setEndDate(event.target.value);
+                  setLoading(true);
+                  setError(null);
+                }}
                 className="rounded-md border border-border bg-background px-3 py-2 text-sm"
               />
             </label>
           </section>
 
+          <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {loading ? "Cargando métricas financieras." : ""}
+          </div>
+
           {error ? (
-            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
+            <div role="alert" className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
               {error}
             </div>
           ) : null}
 
-          <section aria-label="Key performance indicators">
+          <section aria-label="Indicadores clave" aria-busy={loading}>
             <KPIRow metrics={metrics} loading={loading} />
           </section>
 
           <section
-            aria-label="Financial charts"
+            aria-label="Gráficas financieras"
+            aria-busy={loading}
             className="grid grid-cols-1 gap-4 xl:grid-cols-2"
           >
             <IncomeOutcomeChart data={monthlyData} loading={loading} />
