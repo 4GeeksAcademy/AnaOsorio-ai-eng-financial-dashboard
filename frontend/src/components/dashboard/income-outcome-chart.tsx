@@ -30,6 +30,13 @@ interface CustomTooltipProps {
   label?: string
 }
 
+const compactCurrencyFormatter = new Intl.NumberFormat('es-ES', {
+  style: 'currency',
+  currency: 'USD',
+  notation: 'compact',
+  maximumFractionDigits: 0,
+})
+
 function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload?.length) return null
   return (
@@ -38,7 +45,7 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
       {payload.map((entry) => (
         <div key={entry.name} className="flex items-center gap-2 py-0.5">
           <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: entry.color }} />
-          <span className="text-muted-foreground capitalize">{entry.name}:</span>
+          <span className="text-muted-foreground">{entry.name}:</span>
           <span className="font-medium text-foreground ml-auto pl-4">{formatCurrency(entry.value)}</span>
         </div>
       ))}
@@ -66,57 +73,78 @@ export function IncomeOutcomeChart({ data, loading }: IncomeOutcomeChartProps) {
   return (
     <Card className="border-border/60">
       <CardHeader className="pb-4">
-        <CardTitle className="text-base font-semibold">Income vs. Outcome</CardTitle>
-        <CardDescription>Monthly revenue and expenditure evolution</CardDescription>
+        <CardTitle id="income-outcome-title" className="text-base font-semibold">Ingresos y egresos</CardTitle>
+        <CardDescription id="income-outcome-description">Evolución mensual de ingresos y gastos</CardDescription>
       </CardHeader>
       <CardContent>
         {!hasData ? (
           <div className="flex h-[280px] items-center justify-center text-muted-foreground text-sm">
-            No data available to display
+            No hay datos disponibles para mostrar
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" strokeOpacity={0.6} />
-              <XAxis
-                dataKey="month"
-                tick={{ fontSize: 12, fill: 'var(--color-muted-foreground)' }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis
-                tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
-                axisLine={false}
-                tickLine={false}
-                tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
-                width={48}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend
-                formatter={(value) => (
-                  <span className="text-xs text-muted-foreground capitalize">{value}</span>
-                )}
-              />
-              <Line
-                type="monotone"
-                dataKey="income"
-                name="income"
-                stroke="var(--chart-income)"
-                strokeWidth={2}
-                dot={{ r: 3, fill: 'var(--chart-income)', strokeWidth: 0 }}
-                activeDot={{ r: 5, strokeWidth: 0 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="outcome"
-                name="outcome"
-                stroke="var(--chart-outcome)"
-                strokeWidth={2}
-                dot={{ r: 3, fill: 'var(--chart-outcome)', strokeWidth: 0 }}
-                activeDot={{ r: 5, strokeWidth: 0 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <>
+            <div aria-hidden="true">
+              <ResponsiveContainer width="100%" height={280}>
+                <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" strokeOpacity={0.6} />
+                  <XAxis
+                    dataKey="month"
+                    tick={{ fontSize: 12, fill: 'var(--color-muted-foreground)' }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
+                    axisLine={false}
+                    tickLine={false}
+                    tickFormatter={(value) => compactCurrencyFormatter.format(value)}
+                    width={48}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend formatter={(value) => (
+                    <span className="text-xs text-muted-foreground">{value}</span>
+                  )} />
+                  <Line
+                    type="monotone"
+                    dataKey="income"
+                    name="Ingresos"
+                    stroke="var(--chart-income)"
+                    strokeWidth={2}
+                    dot={{ r: 3, fill: 'var(--chart-income)', strokeWidth: 0 }}
+                    activeDot={{ r: 5, strokeWidth: 0 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="outcome"
+                    name="Egresos"
+                    stroke="var(--chart-outcome)"
+                    strokeWidth={2}
+                    dot={{ r: 3, fill: 'var(--chart-outcome)', strokeWidth: 0 }}
+                    activeDot={{ r: 5, strokeWidth: 0 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <table aria-describedby="income-outcome-description" className="sr-only">
+              <caption>Ingresos y egresos mensuales</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Mes</th>
+                  <th scope="col">Ingresos</th>
+                  <th scope="col">Egresos</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((point) => (
+                  <tr key={point.month}>
+                    <th scope="row">{point.month}</th>
+                    <td>{formatCurrency(point.income)}</td>
+                    <td>{formatCurrency(point.outcome)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
         )}
       </CardContent>
     </Card>
