@@ -1,0 +1,7 @@
+- [x]T1 - [Frontend] Añadir o reutilizar en `financial-types.ts` el tipo para la respuesta de facetas.
+- [x]T2 - [Frontend] Consultar las facetas y mostrar dinámicamente las fechas mínima y máxima disponibles en el encabezado.
+- [x]T3 - [Frontend] Añadir los campos opcionales de fecha de inicio y fecha de fin en la parte superior del dashboard.
+- [x]T4 - [Frontend] Enviar las fechas seleccionadas a la consulta de métricas en formato `YYYY-MM-DD` y actualizar los datos al cambiar los filtros.
+- [x]T5 - [Frontend] Calcular los KPI y gráficos a partir de los movimientos filtrados y conservar los estados de carga, error y resultados vacíos.
+- []T6 - [Verificación] Ejecutar las pruebas existentes del backend para filtros y facetas, y `npm run build`.
+- []T7 - [Verificación] Comprobar todos los criterios de aceptación de `spec.md`: rango disponible, fechas vacías, solo inicio, solo fin, ambas fechas, formato enviado y actualización de todos los datos del dashboard.
